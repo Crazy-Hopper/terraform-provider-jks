@@ -69,7 +69,7 @@ func resourceKeyStoreCreate(_ context.Context, d *schema.ResourceData, _ interfa
 
 	ts, err := time.Parse(time.RFC3339, d.Get("timestamp").(string))
 	if err != nil {
-		ts = time.Now()
+		ts = time.Now().Truncate(time.Second).UTC()
 		d.Set("timestamp", ts.Format(time.RFC3339))
 	}
 
