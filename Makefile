@@ -3,7 +3,7 @@ HOSTNAME=hashicorp.com
 NAMESPACE=Crazy-Hopper
 NAME=jks
 BINARY=terraform-provider-${NAME}
-VERSION=0.8.2
+VERSION=0.8.3
 OS_ARCH=darwin_amd64
 
 default: install
