@@ -58,7 +58,7 @@ func resourceTrustStoreCreate(_ context.Context, d *schema.ResourceData, _ inter
 	ts, err := time.Parse(time.RFC3339, d.Get("timestamp").(string))
 	if err != nil {
 		ts = time.Now()
-		d.Set("timestamp", ts)
+		d.Set("timestamp", ts.Format(time.RFC3339))
 	}
 
 	chainCertsInterfaces := d.Get("certificates").([]interface{})

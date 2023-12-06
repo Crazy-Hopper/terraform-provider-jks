@@ -70,7 +70,7 @@ func resourceKeyStoreCreate(_ context.Context, d *schema.ResourceData, _ interfa
 	ts, err := time.Parse(time.RFC3339, d.Get("timestamp").(string))
 	if err != nil {
 		ts = time.Now()
-		d.Set("timestamp", ts)
+		d.Set("timestamp", ts.Format(time.RFC3339))
 	}
 
 	privateKeyDecoded, err := DecodePrivateKeyBytes([]byte(strings.TrimSpace(d.Get("private_key").(string))))
