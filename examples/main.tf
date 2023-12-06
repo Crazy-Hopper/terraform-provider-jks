@@ -5,7 +5,7 @@ terraform {
       version = "~> 3.1.0"
     }
     jks = {
-      source  = "hashicorp.com/epask/jks"
+      source  = "hashicorp.com/Crazy-Hopper/jks"
       version = "= 0.8.1"
     }
   }
