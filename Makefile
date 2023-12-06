@@ -1,10 +1,10 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=hashicorp.com
-NAMESPACE=paragor
+NAMESPACE=epask
 NAME=jks
 BINARY=terraform-provider-${NAME}
-VERSION=0.8.0
-OS_ARCH=darwin_arm64
+VERSION=0.8.1
+OS_ARCH=darwin_amd64
 
 default: install
 
@@ -29,6 +29,7 @@ release:
 install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	ln -sf ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/${BINARY}_${VERSION}
 
 test: 
 	go test -i $(TEST) || exit 1                                                   

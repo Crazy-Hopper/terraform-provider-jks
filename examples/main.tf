@@ -5,8 +5,8 @@ terraform {
       version = "~> 3.1.0"
     }
     jks = {
-      source  = "hashicorp.com/paragor/jks"
-      version = "= 0.8.0"
+      source  = "hashicorp.com/epask/jks"
+      version = "= 0.8.1"
     }
   }
 }
@@ -36,7 +36,7 @@ resource "tls_self_signed_cert" "ca" {
 
   subject {
     common_name  = "Cluster TLS Root CA"
-    organization = "Paragor, Inc."
+    organization = "YourOrg, Inc."
   }
 
   set_subject_key_id = true
