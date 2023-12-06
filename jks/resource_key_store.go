@@ -50,6 +50,11 @@ func resourceKeyStore() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"timestamp": {
+				Description: "Timestamp of key store creation in RFC3339 format.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"jks": {
 				Description: "JKS key store data; base64 encoded.",
 				Type:        schema.TypeString,
@@ -61,6 +66,12 @@ func resourceKeyStore() *schema.Resource {
 
 func resourceKeyStoreCreate(_ context.Context, d *schema.ResourceData, _ interface{}) diag.Diagnostics {
 	ks := keystore.New()
+
+	ts, err := time.Parse(time.RFC3339, d.Get("timestamp").(string))
+	if err != nil {
+		ts = time.Now()
+		d.Set("timestamp", ts)
+	}
 
 	privateKeyDecoded, err := DecodePrivateKeyBytes([]byte(strings.TrimSpace(d.Get("private_key").(string))))
 	if err != nil {
@@ -84,7 +95,7 @@ func resourceKeyStoreCreate(_ context.Context, d *schema.ResourceData, _ interfa
 	err = ks.SetPrivateKeyEntry(
 		"certificate",
 		keystore.PrivateKeyEntry{
-			CreationTime:     time.Now(),
+			CreationTime:     ts,
 			PrivateKey:       privateKey,
 			CertificateChain: keystoreCerts,
 		},
@@ -103,7 +114,7 @@ func resourceKeyStoreCreate(_ context.Context, d *schema.ResourceData, _ interfa
 		err = ks.SetTrustedCertificateEntry(
 			"ca",
 			keystore.TrustedCertificateEntry{
-				CreationTime: time.Now(),
+				CreationTime: ts,
 				Certificate:  caCerts[0],
 			},
 		)
