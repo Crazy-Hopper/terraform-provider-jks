@@ -38,6 +38,11 @@ func resourceTrustStore() *schema.Resource {
 				Default:     "",
 				ForceNew:    true,
 			},
+			"timestamp": {
+				Description: "Timestamp of trust store creation in RFC3339 format.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"jks": {
 				Description: "JKS trust store data; base64 encoded.",
 				Type:        schema.TypeString,
@@ -49,6 +54,12 @@ func resourceTrustStore() *schema.Resource {
 
 func resourceTrustStoreCreate(_ context.Context, d *schema.ResourceData, _ interface{}) diag.Diagnostics {
 	ks := keystore.New()
+
+	ts, err := time.Parse(time.RFC3339, d.Get("timestamp").(string))
+	if err != nil {
+		ts = time.Now()
+		d.Set("timestamp", ts)
+	}
 
 	chainCertsInterfaces := d.Get("certificates").([]interface{})
 	if len(chainCertsInterfaces) == 0 {
@@ -67,7 +78,7 @@ func resourceTrustStoreCreate(_ context.Context, d *schema.ResourceData, _ inter
 		err := ks.SetTrustedCertificateEntry(
 			fmt.Sprintf("%d", i),
 			keystore.TrustedCertificateEntry{
-				CreationTime: time.Now(),
+				CreationTime: ts,
 				Certificate:  keystoreCert,
 			},
 		)
